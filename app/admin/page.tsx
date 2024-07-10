@@ -1,3 +1,4 @@
+import LogoutButton from "@/components/LogoutButton";
 import StatCard from "@/components/StatCard";
 import { columns } from "@/components/table/Columns";
 import { DataTable } from "@/components/table/DataTable";
@@ -11,7 +12,7 @@ const Admin = async () => {
 
   return (
     <div className="mx-auto flex max-w-7xl flex-col space-y-14">
-      <header className="admin-header">
+      <header className="admin-header gap-10">
         <Link href="/" className="cursor-pointer">
           <Image
             src="/assets/icons/logo-full.svg"
@@ -21,7 +22,7 @@ const Admin = async () => {
             className="h-8 w-fit"
           />
         </Link>
-        <p className="text-16-semibold">Admin Dashboard</p>
+        <LogoutButton />
       </header>
       <main className="admin-main">
         <section className="w-full space-y-4">

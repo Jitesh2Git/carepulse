@@ -251,7 +251,7 @@
   }
 
   .shad-otp {
-    @apply w-full flex justify-between !important;
+    @apply w-full flex justify-evenly flex-wrap max-sm:gap-3 !important;
   }
 
   .shad-otp-slot {
