@@ -16,6 +16,25 @@ import { parseStringify } from "../utils";
 
 export const createUser = async (user: CreateUserParams) => {
   try {
+    const emailDocuments = await users.list([
+      Query.equal("email", [user.email]),
+    ]);
+
+    if (emailDocuments.total > 0) {
+      const existingUser = emailDocuments.users[0];
+
+      if (existingUser.phone === user.phone) {
+        return existingUser;
+      } else {
+        console.error(
+          "Email already exists but with a different phone number."
+        );
+        throw new Error(
+          "Email already exists but with a different phone number."
+        );
+      }
+    }
+
     const newUser = await users.create(
       ID.unique(),
       user.email,
@@ -23,14 +42,16 @@ export const createUser = async (user: CreateUserParams) => {
       undefined,
       user.name
     );
-    return parseStringify(newUser);
+    return newUser;
   } catch (error: any) {
-    if (error && error?.code === 409) {
-      const documents = await users.list([Query.equal("email", [user.email])]);
-
-      return documents.users[0];
+    if (error.message.includes("different phone number")) {
+      throw error;
+    } else {
+      console.error("Phone number already exists but with a different email.");
+      throw new Error(
+        "Phone number already exists but with a different email."
+      );
     }
-    console.error("An error occurred while creating a new user:", error);
   }
 };
 

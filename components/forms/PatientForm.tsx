@@ -10,6 +10,7 @@ import { useState } from "react";
 import { UserFormValidation } from "@/lib/validation";
 import { useRouter } from "next/navigation";
 import { createUser } from "@/lib/actions/patient.actions";
+import toast from "react-hot-toast";
 
 export enum FormFieldType {
   INPUT = "input",
@@ -47,10 +48,25 @@ const PatientForm = () => {
       if (user) {
         router.push(`/patients/${user.$id}/register`);
       }
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      if (
+        error.message.includes(
+          "Email already exists but with a different phone number"
+        )
+      ) {
+        toast.error("Email already exists but with a different phone number.");
+      } else if (
+        error.message.includes(
+          "Phone number already exists but with a different email"
+        )
+      ) {
+        toast.error("Phone number already exists but with a different email.");
+      } else {
+        toast.error("An unexpected error occurred.");
+      }
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   }
 
   return (

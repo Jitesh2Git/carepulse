@@ -6,7 +6,7 @@ import { z } from "zod";
 import { Form, FormControl } from "../ui/form";
 import CustomFormField from "../CustomFormField";
 import SubmitButton from "../SubmitButton";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PatientFormValidation } from "@/lib/validation";
 import { useRouter } from "next/navigation";
 import { FormFieldType } from "./PatientForm";
@@ -36,6 +36,14 @@ const RegisterForm = ({ user }: { user: User }) => {
       phone: "",
     },
   });
+
+  useEffect(() => {
+    if (user) {
+      form.setValue("name", user.name);
+      form.setValue("email", user.email);
+      form.setValue("phone", user.phone);
+    }
+  }, [form, user]);
 
   async function onSubmit(values: z.infer<typeof PatientFormValidation>) {
     setIsLoading(true);
