@@ -1,14 +1,35 @@
+"use client";
+
 import LogoutButton from "@/components/LogoutButton";
 import StatCard from "@/components/StatCard";
 import { columns } from "@/components/table/Columns";
 import { DataTable } from "@/components/table/DataTable";
 import { getRecentAppointmentsList } from "@/lib/actions/appointment.actions";
+import { revalidatePath } from "next/cache";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-const Admin = async () => {
-  const appointments = await getRecentAppointmentsList();
+const Admin = () => {
+  const [appointments, setAppointments] = useState({
+    scheduleCount: 0,
+    pendingCount: 0,
+    cancelledCount: 0,
+    documents: [],
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getRecentAppointmentsList();
+        setAppointments(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <div className="mx-auto flex max-w-7xl flex-col space-y-14">
