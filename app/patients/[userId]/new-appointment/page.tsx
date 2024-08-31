@@ -6,7 +6,7 @@ import * as Sentry from "@sentry/nextjs";
 const NewAppointment = async ({ params: { userId } }: SearchParamProps) => {
   const patient = await getPatient(userId);
 
-  Sentry.metrics.set("user_view_new-appointment", patient.name);
+  Sentry.metrics.set("user_view_new-appointment", patient?.name);
 
   return (
     <div className="flex h-screen max-h-screen">
@@ -22,7 +22,7 @@ const NewAppointment = async ({ params: { userId } }: SearchParamProps) => {
           <AppointmentForm
             type="create"
             userId={userId}
-            patientId={patient.$id}
+            patientId={patient?.$id}
           />
           <p className="copyright mt-10 py-12">&copy; 2024 CarePulse</p>
         </div>
