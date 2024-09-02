@@ -19,7 +19,7 @@ const Admin = async () => {
             alt="logo"
             width={162}
             height={32}
-            className="h-8 w-fit"
+            className="h-auto w-auto"
           />
         </Link>
         <LogoutButton />
@@ -34,24 +34,24 @@ const Admin = async () => {
         <section className="admin-stat">
           <StatCard
             type="appointments"
-            count={appointments.scheduleCount}
+            count={appointments?.scheduleCount}
             label="Scheduled appointments"
             icon="/assets/icons/appointments.svg"
           />
           <StatCard
             type="pending"
-            count={appointments.pendingCount}
+            count={appointments?.pendingCount}
             label="Pending appointments"
             icon="/assets/icons/pending.svg"
           />
           <StatCard
             type="cancelled"
-            count={appointments.cancelledCount}
+            count={appointments?.cancelledCount}
             label="Cancelled appointments"
             icon="/assets/icons/cancelled.svg"
           />
         </section>
-        <DataTable data={appointments.documents} columns={columns} />
+        <DataTable data={appointments?.documents} columns={columns} />
       </main>
     </div>
   );

@@ -40,6 +40,8 @@ const Success = async ({
             width={280}
             height={300}
             unoptimized
+            className="h-auto w-auto"
+            priority
           />
           <h2 className="header mb-6 max-w-[600px] text-center">
             Your <span className="text-green-500">appointment request</span> has

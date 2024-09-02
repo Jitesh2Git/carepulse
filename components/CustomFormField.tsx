@@ -60,8 +60,8 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
             <Image
               src={iconSrc}
               alt={iconAlt || "ICON"}
-              width={24}
-              height={24}
+              width={26}
+              height={26}
               className="ml-2"
             />
           )}
@@ -108,8 +108,8 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
           <Image
             src="/assets/icons/calendar.svg"
             alt="calender"
-            width={24}
-            height={24}
+            width={26}
+            height={26}
             className="ml-2"
           />
           <FormControl>

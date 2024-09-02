@@ -70,7 +70,7 @@ const AppointmentForm = ({
       if (type === "create" && patientId) {
         const appointmentData = {
           userId,
-          patient: patientId,
+          patient: patientId!,
           primaryPhysician: values.primaryPhysician,
           schedule: new Date(values.schedule),
           reason: values.reason!,
