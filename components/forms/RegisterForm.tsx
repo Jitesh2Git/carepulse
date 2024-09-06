@@ -31,19 +31,11 @@ const RegisterForm = ({ user }: { user: User }) => {
     resolver: zodResolver(PatientFormValidation),
     defaultValues: {
       ...PatientFormDefaultValues,
-      name: "",
-      email: "",
-      phone: "",
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
     },
   });
-
-  useEffect(() => {
-    if (user) {
-      form.setValue("name", user.name);
-      form.setValue("email", user.email);
-      form.setValue("phone", user.phone);
-    }
-  }, [form, user]);
 
   async function onSubmit(values: z.infer<typeof PatientFormValidation>) {
     setIsLoading(true);
@@ -166,7 +158,7 @@ const RegisterForm = ({ user }: { user: User }) => {
             fieldType={FormFieldType.INPUT}
             name="occupation"
             label="Occupation"
-            placeholder="Software Developer"
+            placeholder="Web Developer"
           />
         </div>
         <div className="flex flex-col gap-6 xl:flex-row">
@@ -197,7 +189,7 @@ const RegisterForm = ({ user }: { user: User }) => {
           label="Primary Physician"
           placeholder="Select a physician"
         >
-          {Doctors.map((doctor, index) => (
+          {Doctors?.map((doctor, index) => (
             <SelectItem key={index} value={doctor.name}>
               <div className="flex cursor-pointer items-center gap-2">
                 <Image

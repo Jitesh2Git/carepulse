@@ -18,6 +18,9 @@ import {
 } from "@/components/ui/table";
 import { Button } from "../ui/button";
 import Image from "next/image";
+import { decryptKey } from "@/lib/utils";
+import { useEffect } from "react";
+import { redirect } from "next/navigation";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -34,6 +37,19 @@ export function DataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   });
+
+  const encryptedKey =
+    typeof window !== "undefined"
+      ? window.localStorage.getItem("accessKey")
+      : null;
+
+  useEffect(() => {
+    const accessKey = encryptedKey && decryptKey(encryptedKey);
+
+    if (accessKey !== process.env.NEXT_PUBLIC_ADMIN_PASSKEY!.toString()) {
+      redirect("/");
+    }
+  }, [encryptedKey]);
 
   return (
     <div className="data-table">

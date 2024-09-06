@@ -42,7 +42,7 @@ export const createUser = async (user: CreateUserParams) => {
       undefined,
       user.name
     );
-    return newUser;
+    return parseStringify(newUser);
   } catch (error: any) {
     if (error.message.includes("different phone number")) {
       throw error;
@@ -85,7 +85,7 @@ export const registerPatient = async ({
       PATIENT_COLLECTION_ID!,
       ID.unique(),
       {
-        identificationDocumentId: file?.$id || null,
+        identificationDocumentId: file?.$id ? file.$id : null,
         identificationDocumentUrl: `${ENDPOINT}/storage/buckets.${BUCKET_ID}/files/${file?.$id}/view?project=${PROJECT_ID}`,
         ...patient,
       }
@@ -102,7 +102,7 @@ export const getPatient = async (userId: string) => {
     const patients = await databases.listDocuments(
       DATABASE_ID!,
       PATIENT_COLLECTION_ID!,
-      [Query.equal("userId", userId)]
+      [Query.equal("userId", [userId])]
     );
     return parseStringify(patients.documents[0]);
   } catch (error) {

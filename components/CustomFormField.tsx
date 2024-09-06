@@ -80,7 +80,7 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
           <Textarea
             placeholder={placeholder}
             {...field}
-            className="shad-textarea"
+            className="shad-textArea"
             disabled={disabled}
           />
         </FormControl>
@@ -129,7 +129,7 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
         <FormControl>
           <Select onValueChange={field.onChange} defaultValue={field.value}>
             <FormControl>
-              <SelectTrigger className="shad-slect-trigger">
+              <SelectTrigger className="shad-select-trigger">
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>
             </FormControl>
@@ -171,7 +171,7 @@ const CustomFormField = (props: CustomProps) => {
       render={({ field }) => (
         <FormItem className="flex-1">
           {fieldType !== FormFieldType.CHECKBOX && label && (
-            <FormLabel>{label}</FormLabel>
+            <FormLabel className="shad-input-label">{label}</FormLabel>
           )}
           <RenderField field={field} props={props} />
           <FormMessage className="shad-error" />

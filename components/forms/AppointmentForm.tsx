@@ -42,7 +42,7 @@ const AppointmentForm = ({
     defaultValues: {
       primaryPhysician: appointment?.primaryPhysician || "",
       schedule: appointment
-        ? new Date(appointment.schedule)
+        ? new Date(appointment?.schedule)
         : new Date(Date.now()),
       reason: appointment?.reason || "",
       note: appointment?.note || "",
@@ -63,7 +63,6 @@ const AppointmentForm = ({
         break;
       default:
         status = "pending";
-        break;
     }
 
     try {
@@ -118,8 +117,6 @@ const AppointmentForm = ({
       break;
     case "schedule":
       buttonLabel = "Schedule Appointment";
-      break;
-    default:
       break;
   }
 
