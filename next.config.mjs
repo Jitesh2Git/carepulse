@@ -7,6 +7,19 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  async headers() {
+    return [
+      {
+        source: "/(.*)", // Matches all routes
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "no-store", // Disable caching
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default withSentryConfig(nextConfig, {
