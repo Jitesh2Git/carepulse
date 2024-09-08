@@ -11,7 +11,6 @@ import { formatDateTime, parseStringify } from "../utils";
 import { Appointment } from "@/types/appwrite.types";
 import { revalidatePath } from "next/cache";
 
-// Create Appointment
 export const createAppointment = async (
   appointment: CreateAppointmentParams
 ) => {
@@ -22,18 +21,13 @@ export const createAppointment = async (
       ID.unique(),
       appointment
     );
-
-    // Revalidate the admin page cache
     revalidatePath("/admin");
-
     return parseStringify(newAppointment);
   } catch (error) {
-    console.error("Error creating appointment:", error);
-    throw new Error("Failed to create appointment.");
+    console.log(error);
   }
 };
 
-// Get Appointment by ID
 export const getAppointment = async (appointmentId: string) => {
   try {
     const appointment = await databases.getDocument(
@@ -42,16 +36,12 @@ export const getAppointment = async (appointmentId: string) => {
       appointmentId
     );
 
-    if (!appointment) throw new Error("Appointment not found.");
-
     return parseStringify(appointment);
   } catch (error) {
-    console.error("Error fetching appointment:", error);
-    throw new Error("Failed to fetch appointment.");
+    console.log(error);
   }
 };
 
-// Get Recent Appointments List
 export const getRecentAppointmentsList = async () => {
   try {
     const appointments = await databases.listDocuments(
@@ -60,9 +50,6 @@ export const getRecentAppointmentsList = async () => {
       [Query.orderDesc("$createdAt")]
     );
 
-    if (!appointments.documents) throw new Error("No appointments found.");
-
-    // Count appointments based on status
     const initialCounts = {
       scheduleCount: 0,
       pendingCount: 0,
@@ -71,37 +58,29 @@ export const getRecentAppointmentsList = async () => {
 
     const counts = (appointments.documents as Appointment[]).reduce(
       (acc, appointment) => {
-        switch (appointment.status) {
-          case "scheduled":
-            acc.scheduleCount += 1;
-            break;
-          case "pending":
-            acc.pendingCount += 1;
-            break;
-          case "cancelled":
-            acc.cancelledCount += 1;
-            break;
+        if (appointment.status === "scheduled") {
+          acc.scheduleCount += 1;
+        } else if (appointment.status === "pending") {
+          acc.pendingCount += 1;
+        } else if (appointment.status === "cancelled") {
+          acc.cancelledCount += 1;
         }
         return acc;
       },
       initialCounts
     );
 
-    // Prepare the final data structure
     const data = {
       totalCount: appointments.total,
       ...counts,
       documents: appointments.documents,
     };
-
     return parseStringify(data);
   } catch (error) {
-    console.error("Error fetching recent appointments:", error);
-    throw new Error("Failed to fetch recent appointments.");
+    console.log(error);
   }
 };
 
-// Update Appointment
 export const updateAppointment = async ({
   appointmentId,
   userId,
@@ -109,38 +88,35 @@ export const updateAppointment = async ({
   type,
 }: UpdateAppointmentParams) => {
   try {
-    // Update the appointment document
     const updatedAppointment = await databases.updateDocument(
       DATABASE_ID!,
       APPOINTMENT_COLLECTION_ID!,
       appointmentId,
       appointment
     );
+    if (!updatedAppointment) throw new Error("Appointment not found");
 
-    if (!updatedAppointment) throw new Error("Appointment not found.");
-
-    // Construct SMS notification content
-    const smsMessage =
+    const smsMessage = `
+    Hi, it's CarePulse. 
+    ${
       type === "schedule"
-        ? `Hi, it's CarePulse. Your appointment has been scheduled for ${
+        ? `Your appointment has been scheduled for ${
             formatDateTime(appointment.schedule!).dateTime
           } with Dr. ${appointment.primaryPhysician}.`
-        : `Hi, it's CarePulse. We regret to inform you that your appointment has been cancelled for the following reason: ${appointment.cancellationReason}.`;
+        : `We regret to inform you that your appointment has been cancelled for the following reason : ${appointment.cancellationReason}.`
+    }
+    `;
 
-    // Send SMS notification
     await sendSMSNotification(userId, smsMessage);
 
-    // Revalidate the admin page cache
     revalidatePath("/admin");
 
     return parseStringify(updatedAppointment);
   } catch (error) {
-    console.error("Error updating appointment:", error);
-    throw new Error("Failed to update appointment.");
+    console.log(error);
   }
 };
 
-// Send SMS Notification
 export const sendSMSNotification = async (userId: string, content: string) => {
   try {
     const message = await messaging.createSms(
@@ -149,9 +125,9 @@ export const sendSMSNotification = async (userId: string, content: string) => {
       [],
       [userId]
     );
+
     return parseStringify(message);
   } catch (error) {
-    console.error("Error sending SMS notification:", error);
-    throw new Error("Failed to send SMS notification.");
+    console.log(error);
   }
 };
