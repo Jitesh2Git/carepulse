@@ -24,7 +24,11 @@ export const createUser = async (user: CreateUserParams) => {
       const existingUser = emailDocuments.users[0];
 
       if (existingUser.phone === user.phone) {
-        return existingUser;
+        if (existingUser.name !== user.name) {
+          console.error("User name does not match.");
+          throw new Error("User name does not match.");
+        }
+        return parseStringify(existingUser);
       } else {
         console.error(
           "Email already exists but with a different phone number."
@@ -44,7 +48,10 @@ export const createUser = async (user: CreateUserParams) => {
     );
     return parseStringify(newUser);
   } catch (error: any) {
-    if (error.message.includes("different phone number")) {
+    if (
+      error.message.includes("different phone number") ||
+      error.message.includes("User name does not match")
+    ) {
       throw error;
     } else {
       console.error("Phone number already exists but with a different email.");

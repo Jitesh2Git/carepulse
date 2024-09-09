@@ -19,6 +19,7 @@ const NewAppointment = async ({ params: { userId } }: SearchParamProps) => {
             height={1000}
             className="mb-12 h-10 w-fit"
           />
+          {/* @ts-ignore */}
           <AppointmentForm
             type="create"
             userId={userId}

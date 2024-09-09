@@ -6,7 +6,7 @@ import { z } from "zod";
 import { Form, FormControl } from "../ui/form";
 import CustomFormField from "../CustomFormField";
 import SubmitButton from "../SubmitButton";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { PatientFormValidation } from "@/lib/validation";
 import { useRouter } from "next/navigation";
 import { FormFieldType } from "./PatientForm";

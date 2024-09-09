@@ -64,15 +64,22 @@ export const columns: ColumnDef<Appointment>[] = [
     header: () => <div className="pl-4">Actions</div>,
     cell: ({ row: { original: data } }) => {
       const isCancelled = data.status === "cancelled";
+      const isScheduled = data.status === "scheduled";
 
       return (
         <div className="flex gap-1">
-          <AppointmentModal
-            type="schedule"
-            patientId={data.patient.$id}
-            userId={data.userId}
-            appointment={data}
-          />
+          {isScheduled ? (
+            <button className="ml-4 font-semibold text-gray-400" disabled>
+              Schedule
+            </button>
+          ) : (
+            <AppointmentModal
+              type="schedule"
+              patientId={data.patient.$id}
+              userId={data.userId}
+              appointment={data}
+            />
+          )}
           {isCancelled ? (
             <button className="ml-4 font-semibold text-gray-400" disabled>
               Cancel

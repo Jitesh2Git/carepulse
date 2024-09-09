@@ -43,25 +43,33 @@ const PatientForm = () => {
     setIsLoading(true);
 
     try {
-      const userData = { name: name, email: email, phone: phone };
+      const userData = { name, email, phone };
       const user = await createUser(userData);
       if (user) {
         router.push(`/patients/${user.$id}/register`);
       }
     } catch (error: any) {
       if (
+        error.message &&
         error.message.includes(
           "Email already exists but with a different phone number"
         )
       ) {
         toast.error("Email already exists but with a different phone number.");
       } else if (
+        error.message &&
         error.message.includes(
           "Phone number already exists but with a different email"
         )
       ) {
         toast.error("Phone number already exists but with a different email.");
+      } else if (
+        error.message &&
+        error.message.includes("User name does not match")
+      ) {
+        toast.error("User name does not match.");
       } else {
+        console.log(error.message || error);
         toast.error("An unexpected error occurred.");
       }
     } finally {

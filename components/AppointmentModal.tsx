@@ -22,7 +22,7 @@ const AppointmentModal = ({
   type: "schedule" | "cancel";
   patientId: string;
   userId: string;
-  appointment?: Appointment;
+  appointment: Appointment;
 }) => {
   const [open, setOpen] = useState(false);
 
