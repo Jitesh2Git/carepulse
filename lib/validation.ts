@@ -88,7 +88,7 @@ export const PatientFormValidation = z
           }
         }
         return true;
-      }, "Identification document dimensions must not exceed 1024x1024 pixels."),
+      }, "File dimensions must not exceed 1024x1024 pixels."),
     treatmentConsent: z
       .boolean()
       .default(false)
