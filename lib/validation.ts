@@ -49,9 +49,6 @@ export const PatientFormValidation = z
       .string()
       .min(2, "Policy number must be at least 2 characters")
       .max(50, "Policy number must be at most 50 characters"),
-    identificationNumber: z
-      .string()
-      .min(5, "Identification number must be at least 5 characters"),
     identificationDocument: z
       .custom<File[]>()
       .refine(
@@ -60,7 +57,38 @@ export const PatientFormValidation = z
       )
       .refine((files) => {
         return files.every((file) => file.size <= 50 * 1024 * 1024);
-      }, "File size must not exceed 50MB."),
+      }, "File size must not exceed 50MB.")
+      .refine(async (files) => {
+        const checkDimensions = async (file: File) => {
+          return new Promise<boolean>((resolve, reject) => {
+            const img = new Image();
+            const objectURL = URL.createObjectURL(file);
+            img.onload = function () {
+              const width = img.width;
+              const height = img.height;
+              if (width <= 1024 && height <= 1024) {
+                resolve(true);
+              } else {
+                reject(
+                  "Image dimensions must be less than or equal to 1024x1024"
+                );
+              }
+            };
+            img.onerror = function () {
+              reject("Error loading image");
+            };
+            img.src = objectURL;
+          });
+        };
+        for (let file of files) {
+          try {
+            await checkDimensions(file);
+          } catch (error) {
+            return false;
+          }
+        }
+        return true;
+      }, "Identification document dimensions must not exceed 1024x1024 pixels."),
     treatmentConsent: z
       .boolean()
       .default(false)
