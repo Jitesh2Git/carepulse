@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import LogoutButton from "@/components/LogoutButton";
 import StatCard from "@/components/StatCard";
 import { columns } from "@/components/table/Columns";
